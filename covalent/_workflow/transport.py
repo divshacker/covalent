@@ -27,6 +27,7 @@ from typing import Any, Callable, Dict, List
 import cloudpickle
 import networkx as nx
 
+from .._data_store import DataStore, models
 from .._shared_files.defaults import parameter_prefix
 
 
@@ -122,6 +123,9 @@ class _TransportGraph:
     def __init__(self) -> None:
         self._graph = nx.MultiDiGraph()
         self.lattice_metadata = None
+
+        # IDs of nodes modified during the workflow run
+        self.dirty_nodes = []
 
     def add_node(self, name: str, function: Callable, metadata: Dict, **attr) -> int:
         """
@@ -237,6 +241,7 @@ class _TransportGraph:
             KeyError: If the node key is not found.
         """
 
+        self.modified_nodes.append(node_key)
         self._graph.nodes[node_key][value_key] = value
 
     def get_edge_data(self, dep_key: int, node_key: int) -> Any:
@@ -355,3 +360,17 @@ class _TransportGraph:
                 function_ser
             )
         self._graph = nx.readwrite.node_link_graph(node_link_data)
+
+    def save_ds(self, ds: DataStore, modified_only=True):
+        if modified_only:
+            for key in self.dirty_nodes:
+                self.save_node_ds(ds, key)
+            self.dirty_nodes.clear()
+        else:
+            # Save all nodes and edges
+            raise NotImplementedError
+
+        raise NotImplementedError
+
+    def save_node_ds(self, ds: DataStore, node_key: int):
+        raise NotImplementedError
