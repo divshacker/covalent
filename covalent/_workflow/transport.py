@@ -27,7 +27,7 @@ from typing import Any, Callable, Dict, List
 import cloudpickle
 import networkx as nx
 
-from .._data_store import DataStore, models
+from .._data_store import DataStoreSession, models
 from .._shared_files.defaults import parameter_prefix
 
 
@@ -361,7 +361,7 @@ class _TransportGraph:
             )
         self._graph = nx.readwrite.node_link_graph(node_link_data)
 
-    def save_ds(self, ds: DataStore, modified_only=True):
+    def save_ds(self, ds: DataStoreSession, modified_only=True):
         if modified_only:
             for key in self.dirty_nodes:
                 self.save_node_ds(ds, key)
@@ -372,5 +372,5 @@ class _TransportGraph:
 
         raise NotImplementedError
 
-    def save_node_ds(self, ds: DataStore, node_key: int):
+    def save_node_ds(self, ds: DataStoreSession, node_key: int):
         raise NotImplementedError

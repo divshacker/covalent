@@ -29,7 +29,7 @@ import cloudpickle as pickle
 import yaml
 from sqlalchemy.orm import Session
 
-from .._data_store import DataStore, models
+from .._data_store import DataStoreSession, models
 from .._shared_files import logger
 from .._shared_files.util_classes import RESULT_STATUS, Status
 from .utils import convert_to_lattice_function_call
@@ -445,8 +445,10 @@ Node Outputs
         if write_source:
             self._write_dispatch_to_python_file()
 
-    def save_ds(self, ds: DataStore):
-        """Save Result object to a DataStore"""
+    def save_ds(self, ds: DataStoreSession):
+        """Save Result object to a DataStoreSession. Changes are queued until
+        committed by the caller."""
+
         raise NotImplementedError
 
     def _convert_to_electron_result(self) -> Any:

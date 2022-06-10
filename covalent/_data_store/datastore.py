@@ -18,6 +18,7 @@
 #
 # Relief from the License may be granted by purchasing a commercial license.
 
+from contextlib import contextmanager
 from typing import BinaryIO, Generator, List, Union
 
 from sqlalchemy import create_engine
@@ -50,10 +51,48 @@ class DataStore:
         if initialize_db:
             models.Base.metadata.create_all(self.engine)
 
+    @contextmanager
+    def begin_session(self):
+        with Session(self.engine) as session:
+            session.begin()
+            ds_session = DataStoreSession(session)
+            try:
+                yield ds_session
+
+                session.commit()
+                for arg in ds_session.pending_uploads:
+                    self.upload_file(*arg)
+                for arg in ds_session.pending_deletes:
+                    self.delete_file(*arg)
+
+            except Exception as ex:
+                session.rollback()
+                raise ex
+
+            finally:
+                pass
+
     def upload_file(self, data: BinaryIO, storage_type: str, storage_path: str, file_name: str):
+
+        raise NotImplementedError
+
+    def delete_file(self, storage_type: str, storage_path: str, file_name: str):
 
         raise NotImplementedError
 
     def download_file(self, storage_type: str, storage_path: str, file_name: str):
 
         raise NotImplementedError
+
+
+class DataStoreSession:
+    def __init__(self, session: Session):
+        self.db_session = session
+        self.pending_uploads = []
+        self.pending_deletes = []
+
+    def queue_upload(self, data: BinaryIO, storage_type: str, storage_path: str, file_name: str):
+        self.pending_uploads.append((data, storage_type, storage_path, file_name))
+
+    def queue_delete(self, storage_type: str, storage_path: str, file_name: str):
+        self.pending_deletes.append((storage_type, storage_path, file_name))

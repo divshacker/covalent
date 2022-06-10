@@ -33,7 +33,7 @@ import networkx as nx
 
 import covalent_ui.result_webhook as result_webhook
 
-from .._data_store import DataStore, models
+from .._data_store import DataStoreSession, models
 from .._shared_files import logger
 from .._shared_files.config import get_config
 from .._shared_files.context_managers import active_lattice_manager
@@ -211,7 +211,7 @@ class Lattice:
         plt.tight_layout()
         return ax
 
-    def save_ds(self, ds: DataStore):
+    def save_ds(self, ds: DataStoreSession):
         self.transport_graph.save_ds(ds)
         raise NotImplementedError
 
