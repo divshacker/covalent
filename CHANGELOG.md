@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Operations
+
+- Update pre-commit version
+
 ### Docs
 
 - Fixed display issues with figure (in dark mode) and bullet points in tutorials
