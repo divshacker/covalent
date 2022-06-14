@@ -445,7 +445,7 @@ Node Outputs
         if write_source:
             self._write_dispatch_to_python_file()
 
-    def save_ds(self, ds: DataStoreSession):
+    def persist(self, ds: DataStoreSession):
         """Save Result object to a DataStoreSession. Changes are queued until
         committed by the caller."""
 

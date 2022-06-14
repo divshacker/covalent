@@ -361,10 +361,10 @@ class _TransportGraph:
             )
         self._graph = nx.readwrite.node_link_graph(node_link_data)
 
-    def save_ds(self, ds: DataStoreSession, modified_only=True):
+    def persist(self, ds: DataStoreSession, modified_only=True):
         if modified_only:
             for key in self.dirty_nodes:
-                self.save_node_ds(ds, key)
+                self.persist_node(ds, key)
             self.dirty_nodes.clear()
         else:
             # Save all nodes and edges
@@ -372,5 +372,5 @@ class _TransportGraph:
 
         raise NotImplementedError
 
-    def save_node_ds(self, ds: DataStoreSession, node_key: int):
+    def persist_node(self, ds: DataStoreSession, node_key: int):
         raise NotImplementedError

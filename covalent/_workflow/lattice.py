@@ -211,8 +211,8 @@ class Lattice:
         plt.tight_layout()
         return ax
 
-    def save_ds(self, ds: DataStoreSession):
-        self.transport_graph.save_ds(ds)
+    def persist(self, ds: DataStoreSession):
+        self.transport_graph.persist(ds)
         raise NotImplementedError
 
     def draw(self, *args, **kwargs) -> None:
