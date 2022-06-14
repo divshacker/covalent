@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Operations
 
 - Added a retry block to the webapp build step in `tests.yml`
+- Syntax fix in hotfix.yml
 
 ### Docs
 
